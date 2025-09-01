@@ -66,26 +66,26 @@ jobs:
 
     - name: Create repository or use what is available
       run: |
-    cd workspace
-    PROJECT_NAME="android_dump_${{ env.MANUFACTURER_NAME }}_${{ env.VENDOR_NAME }}"
-    NAMESPACE="${{ env.GITLAB_NAMESPACE }}" 
+       cd workspace
+       PROJECT_NAME="android_dump_${{ env.MANUFACTURER_NAME }}_${{ env.VENDOR_NAME }}"
+       NAMESPACE="${{ env.GITLAB_NAMESPACE }}" 
     
-    if curl --header "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" \
+       if curl --header "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" \
        --silent --fail "https://gitlab.com/api/v4/projects/${NAMESPACE}%2F${PROJECT_NAME}" \
        -o repo.json; then
-      echo "Repo already exists → use old repo"
-    else
-      echo "Repo doesn't exist yet → create a new one"
-      curl --header "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" \
+       echo "Repo already exists → use old repo"
+       else
+       echo "Repo doesn't exist yet → create a new one"
+       curl --header "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" \
         -X POST "https://gitlab.com/api/v4/projects" \
         --data "name=${PROJECT_NAME}" \
         --data "path=${PROJECT_NAME}" \
         --data "visibility=public" \
         -o repo.json
-    fi
+       fi
 
-    echo "USERNAME=$(jq -r '.namespace.path' repo.json)" >> $GITHUB_ENV
-    cat repo.json
+        echo "USERNAME=$(jq -r '.namespace.path' repo.json)" >> $GITHUB_ENV
+        cat repo.json
     - name: Push as Repository
       run: |
         cd workspace/dumprx/out

@@ -84,7 +84,7 @@ jobs:
         -o repo.json
        fi
 
-        echo "USERNAME=$(jq -r '.namespace.path' repo.json)" >> $GITHUB_ENV
+        echo "USERNAME=$(cat repo.json | grep -o '"username":"[^"]*' | cut -d'"' -f4)" >> $GITHUB_ENV
         cat repo.json
     - name: Push as Repository
       run: |
